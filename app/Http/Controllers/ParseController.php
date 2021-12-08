@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use GrahamCampbell\ResultType\Success;
+use GrahamCampbell\ResultType\Error;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use function array_merge;
 
 class ParseController extends Controller
 {
@@ -18,8 +21,7 @@ class ParseController extends Controller
         return $parses[0];
     }
 
-
-    public function latest(string $region, string $realm, string $character)
+    public static function loadParses(string $region, string $realm, string $character)
     {
         $response = Http::get(
             "https://www.warcraftlogs.com/v1/parses/character/$character/$realm/$region", [
@@ -29,9 +31,20 @@ class ParseController extends Controller
         );
 
         if($response->ok()) {
-            return response()->json(self::latestParse($response->json()));
+            return Success::create($response->json());
         } else {
-            return response()->json([ "error" => true, "reason" => $response->body(), "status" => $response->status()], 400);
+            return Error::create([ "reason" => $response->body(), "status" => $response->status() ]);
+        }
+    }
+
+
+    public function latest(string $region, string $realm, string $character)
+    {
+        $result = self::loadParses($region, $realm, $character);
+        if($result->success()->isDefined()) {
+            return response()->json(self::latestParse($result->success()->get()));
+        } else {
+            return response()->json(array_merge([ "error" => true ], $result->error()->get()), 400);
         }
     }
 }

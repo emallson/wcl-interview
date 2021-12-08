@@ -15,4 +15,4 @@ use App\Http\Controllers\ParseController;
 |
 */
 
-Route::get('parses/{region}/{realm}/{character}', [ParseController::class, 'latest']);
+Route::get('parse/latest/{region}/{realm}/{character}', [ParseController::class, 'latest']);
