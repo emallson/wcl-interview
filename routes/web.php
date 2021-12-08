@@ -15,6 +15,14 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Search');
-});
+Route::get(
+    '/', function () {
+        return Inertia::render('Landing');
+    }
+);
+
+Route::get(
+    '/character/{region}/{realm}/{character}', function ($region, $realm, $character) {
+        return Inertia::render('Character', [ 'region' => $region, 'realm' => $realm, 'character' => $character]);
+    }
+);

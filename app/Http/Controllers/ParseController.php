@@ -41,10 +41,20 @@ class ParseController extends Controller
     public function latest(string $region, string $realm, string $character)
     {
         $result = self::loadParses($region, $realm, $character);
-        if($result->success()->isDefined()) {
-            return response()->json(self::latestParse($result->success()->get()));
-        } else {
+        if($result->error()->isDefined()) {
             return response()->json(array_merge([ "error" => true ], $result->error()->get()), 400);
+        } 
+
+        $data = $result->success()->get();
+        if(count($data) == 0) {
+            return response()->json(
+                [
+                "error" => true,
+                "reason" => "no parses found"
+                ], 404
+            );
         }
+
+        return response()->json(self::latestParse($result->success()->get()));
     }
 }

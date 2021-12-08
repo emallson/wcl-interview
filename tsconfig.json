@@ -5,7 +5,8 @@
         "allowJs": true,
         "strict": true,
         "esModuleInterop": true,
-        "jsx": "react-jsxdev"
+        "jsx": "react-jsxdev",
+        "moduleResolution": "node"
     },
     "include": ["resources/js"]
 }
