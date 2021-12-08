@@ -4,6 +4,7 @@ import useStore, { SearchParameters, Parse } from "../store";
 import shallow from "zustand/shallow";
 import { useEffect } from "react";
 import styled from "styled-components";
+import Layout from "../Components/Layout";
 
 const Error = styled.span`
     color: red;
@@ -19,9 +20,22 @@ export default function Character(
         data?: Parse;
     } /* destructuring because inertia also provides other props */
 ) {
-    const { setSearchParameters, loadParse, parse, setParse } = useStore(
-        ({ setSearchParameters, loadLatestParse, parse, setParse }) => ({
+    const {
+        setSearchParameters,
+        loadParse,
+        parse,
+        setParse,
+        parseLoading,
+    } = useStore(
+        ({
             setSearchParameters,
+            loadLatestParse,
+            parse,
+            setParse,
+            parseLoading,
+        }) => ({
+            setSearchParameters,
+            parseLoading,
             loadParse: loadLatestParse,
             parse,
             setParse,
@@ -39,14 +53,15 @@ export default function Character(
     }, [realm, region, character]);
 
     return (
-        <div>
+        <Layout>
             <Search />
+            {parseLoading && <span>Loading...</span>}
             {parse &&
                 (parse.ok ? (
                     <PaperDoll parse={parse.val} />
                 ) : (
                     <Error>{parse.val.data.reason}</Error>
                 ))}
-        </div>
+        </Layout>
     );
 }

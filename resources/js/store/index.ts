@@ -55,6 +55,7 @@ export type SearchParameterUpdate = Partial<SearchParameters>;
 export interface State {
     searchParameters: SearchParameters;
     parse?: Result<Parse, any>;
+    parseLoading?: boolean;
     setSearchParameters: (update: SearchParameterUpdate) => void;
     loadLatestParse: () => Promise<void>;
     setParse: (parse: Parse) => void;
@@ -76,17 +77,22 @@ export const useStore = create<State>(
                     parse: Err(
                         new Error("unable to load parse: missing parameters")
                     ),
+                    parseLoading: false,
                 }));
             }
-            set(() => ({ parse: undefined }));
+            set(() => ({ parse: undefined, parseLoading: true }));
             try {
                 const data = await axios.get(
                     `/api/parse/latest/${region}/${realm}/${character}`
                 );
-                return set(() => ({ parse: Ok(data.data) }));
+                return set(() => ({
+                    parse: Ok(data.data),
+                    parseLoading: false,
+                }));
             } catch (err) {
                 return set(() => ({
                     parse: Err((err as AxiosError).response),
+                    parseLoading: false,
                 }));
             }
         },

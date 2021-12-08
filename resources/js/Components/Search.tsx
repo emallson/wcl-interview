@@ -1,6 +1,8 @@
 import { useCallback } from "react";
 import { useStore, SearchParameters } from "../store";
 import { Link } from "@inertiajs/inertia-react";
+import { Inertia } from "@inertiajs/inertia";
+import styled from "styled-components";
 
 function useSearchParameter<T extends keyof SearchParameters>(
     key: T
@@ -18,13 +20,35 @@ function useSearchParameter<T extends keyof SearchParameters>(
     return [datum, setter];
 }
 
+const SearchContainer = styled.div`
+    display: grid;
+    grid-auto-flow: column;
+    grid-column-gap: 0.5rem;
+
+    & button {
+        padding: 0 0.5em;
+        &:disabled {
+            border: 1px solid #ccc;
+            color: #ccc;
+        }
+
+        border: 1px solid hsl(220, 8.9%, 46.1%);
+
+        &:hover {
+            box-shadow: 2px 1px 1px hsl(220, 8.9%, 46.1%);
+        }
+    }
+`;
+
 export default function Search() {
     const [region, setRegion] = useSearchParameter("region");
     const [realm, setRealm] = useSearchParameter("realm");
     const [character, setCharacter] = useSearchParameter("character");
 
+    const url = `/character/${region}/${realm}/${character}`;
+
     return (
-        <div>
+        <SearchContainer>
             <select value={region} onChange={(e) => setRegion(e.target.value)}>
                 {["US", "EU", "KR", "TW", "CN"].map((region) => (
                     <option key={region} value={region}>
@@ -44,15 +68,12 @@ export default function Search() {
                 aria-label="Character Name"
                 placeholder="Character Name"
                 onChange={(e) => setCharacter(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && Inertia.visit(url)}
                 value={character || ""}
             />
-            <Link
-                as="button"
-                disabled={!realm || !character}
-                href={`/character/${region}/${realm}/${character}`}
-            >
+            <Link as="button" disabled={!realm || !character} href={url}>
                 Search
             </Link>
-        </div>
+        </SearchContainer>
     );
 }
