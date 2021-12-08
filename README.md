@@ -1,66 +1,60 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+## WCL Interview Project
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A basic project to load and display data from the most recent parse for a character.
 
-## About Laravel
+Before you dig in, I'd like to acknowledge that _I've never used Laravel
+before._ The last time I used PHP in any serious capacity was 2010-ish and the
+ecosystem has progressed _significantly_ since then (and thank goodness for
+that!).
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+I instantiated the project using the Laravel-React template, which includes a
+lot of cruft that I don't need. I removed parts of it that were obviously
+unnecessary, but the prevalence of dependency injection makes me wary of just
+deleting large chunks of the `app` folder so a large chunk of that still
+remains.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Running
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+```
+./vendor/bin/sail up -d
+./vendor/bin/sail migrate
+./vendor/bin/sail npm run hot
+```
 
-## Learning Laravel
+Then navigate to `http://localhost`.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Key Pieces
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+-   [`ParseController`](app/Http/Controllers/ParseController.php) - main controller used to look up latest parses
+-   [`routes/web.php`](routes/web.php) - frontend routes, including injection of cached data
+-   [`routes/api.php`](routes/api.php) - minimal API route. not much to see
+-   [`resources/js/`](resources/js) - the bulk of the code written. see the `Pages/` subdirectory for the two views used.
 
-## Laravel Sponsors
+### Reflection: Challenges
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+The most challenging piece of this project was honestly just learning Laravel.
+Laravel is a _big_ framework that is opt-out (i.e. it gives you _everything_
+unless you ask otherwise---it installed **SIX** services the first time I spun
+up a Laravel project!), which means it has a significant surface area to learn.
+Additionally, the Laravel documentation is honestly...not great. There's a lot
+of text spent covering advanced features and a relative dearth of "here is how
+you create a basic table using our ORM". That left me consulting with a variety
+of resources outside of the main Laravel site, and dealing with the fact that
+many of them are out of date.
 
-### Premium Partners
+That said: once I got over the initial hump and understood how Laravel
+organizes things, it was reasonably pleasant to work with. PHP is still an
+awkward language, but I'm a sucker for anything with a batteries-included
+testing framework and this fits the bill (see the `ParseController`
+tests---database and HTTP facades built-in? _swoon_).
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[CMS Max](https://www.cmsmax.com/)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
-- **[Romega Software](https://romegasoftware.com)**
+### Reflection: Things I Wish I'd Done
 
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+1. Delete about 10,000 more lines of Laravel starter-project cruft that I'm not using.
+2. Explored Laravel's `Cache` facade for use instead of Postgres as a cache
+   layer (did approximately 30 seconds of looking at it, and just went with
+   what I knew instead).
+3. Frontend tests (there are none).
+4. Remove tailwind (I used `styled-components`, but tailwind does a bunch of
+   resets that I relied on for this so I can't just delete without replicating
+   that)
