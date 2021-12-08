@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "esnext",
+        "allowJs": true,
+        "strict": true,
+        "esModuleInterop": true,
+        "jsx": "react-jsxdev"
+    },
+    "include": ["resources/js"]
+}
