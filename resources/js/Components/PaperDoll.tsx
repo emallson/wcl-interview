@@ -53,6 +53,7 @@ const LegendaryName = styled.div`
 `;
 
 const PaperDollContainer = styled.div`
+    margin-top: 2rem;
     display: grid;
     justify-content: start;
     grid-template-areas:

@@ -8,9 +8,11 @@ use function json_decode;
 use App\Http\Controllers\ParseController;
 use function json_encode;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ParseTest extends TestCase
 {
+    use RefreshDatabase;
     private $data;
 
     protected function setUp(): void
@@ -73,5 +75,7 @@ class ParseTest extends TestCase
             "encounterName" => "Guardian of the First Ones"
             ]
         );
+
+        $this->assertDatabaseHas('cached_parses', ['region' => 'US', 'realm' => 'Turalyon', 'character' => 'Eisenpelz']);
     }
 }

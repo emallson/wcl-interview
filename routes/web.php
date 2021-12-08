@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\ParseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +24,7 @@ Route::get(
 
 Route::get(
     '/character/{region}/{realm}/{character}', function ($region, $realm, $character) {
-        return Inertia::render('Character', [ 'region' => $region, 'realm' => $realm, 'character' => $character]);
+        $data = ParseController::cachedParse($region, $realm, $character);
+        return Inertia::render('Character', [ 'region' => $region, 'realm' => $realm, 'character' => $character, 'data' => $data]);
     }
 );
