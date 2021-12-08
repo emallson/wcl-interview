@@ -20,6 +20,13 @@ mix.ts("resources/js/app.js", "public/js")
     ])
     .webpackConfig(require("./webpack.config"));
 
+mix.options({
+    hmrOptions: {
+        host: "localhost",
+        port: 8080,
+    },
+});
+
 if (mix.inProduction()) {
     mix.version();
 }
