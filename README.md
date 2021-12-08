@@ -15,10 +15,15 @@ remains.
 
 ### Running
 
+Copy `.env.example` to `.env` and set `WCL_API_KEY` to your v1 API key.
+
+This uses `sail` with PHP 8.1. I am using the vendored copy from the Laravel starter project, @ me if there are issues with the copy you've got.
+
 ```
-./vendor/bin/sail up -d
-./vendor/bin/sail migrate
-./vendor/bin/sail npm run hot
+sail up -d
+sail artisan migrate
+sail npm install
+sail npm run hot
 ```
 
 Then navigate to `http://localhost`.
